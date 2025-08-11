@@ -1,0 +1,35 @@
+{
+  "name": "node-web-scraper",
+  "version": "1.0.0",
+  "description": "Web Scraper Powered by Node.js & Puppeteer",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs",
+    "commit": "nhb-commit",
+    "format": "nhb-format",
+    "count": "nhb-count",
+    "delete": "nhb-delete"
+  },
+  "keywords": [
+    "web",
+    "scraper",
+    "puppeteer"
+  ],
+  "author": {
+    "name": "Nazmul Hassan",
+    "email": "nazmulnhb@gmail.com"
+  },
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "nhb-scripts": "^1.8.52",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "nhb-toolbox": "^4.14.1",
+    "puppeteer": "^24.16.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}
