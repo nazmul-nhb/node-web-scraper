@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"noEmit": true
+	},
+	"include": ["lib/**/*", "*.mjs"],
+	"exclude": ["node_modules"]
+}
