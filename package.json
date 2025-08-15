@@ -1,6 +1,6 @@
 {
 	"name": "node-web-scraper",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "Web Scraper Powered by Node.js & Puppeteer",
 	"main": "index.mjs",
 	"type": "module",
