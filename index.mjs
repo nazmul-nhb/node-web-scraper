@@ -172,11 +172,15 @@ async function saveData(baseUrl, pages, folder) {
 
 			// fs.writeFileSync(path.join(htmlFolder, `${sanitizeFilename(page)}.html`), html);
 		} finally {
-			await pageInstance.close();
+			if (!pageInstance.isClosed()) {
+				await pageInstance.close();
+			}
+
+			pageInstance.removeAllListeners();
+
 			await delay(3000);
 		}
 	}
-
 	await Browser.close();
 	outro(chalk.blueBright('🐸 Scrapping Completed!'));
 }
