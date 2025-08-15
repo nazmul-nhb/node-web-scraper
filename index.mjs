@@ -17,9 +17,7 @@ config({ path: path.join(process.cwd(), '.env'), quiet: true });
  * @returns {string} The sanitized filename.
  */
 function sanitizeFilename(name) {
-	return name
-		.replace(/[<>:"/\\|?*]/g, '') // remove invalid chars
-		.replace(/[. ]+$/g, ''); // remove trailing dots/spaces
+	return name?.replace(/[<>:"/\\|?*]/g, '');
 }
 
 /**
@@ -44,10 +42,8 @@ async function saveData(baseUrl, pages, folder) {
 
 	const s = spinner();
 
-	for (const page of pages.filter((p) => !p.includes('"'))) {
-		const pageUrl = `${baseUrl}${page}`;
-
-		s.start(chalk.green(`🧭 Navigating to ${pageUrl}`));
+	for (const page of pages) {
+		const pageUrl = `${baseUrl}${page.replace(/\s+/g, '_')}`;
 
 		const jsonFileName = path.join(outputDir, `${sanitizeFilename(page)}.json`);
 
@@ -55,6 +51,8 @@ async function saveData(baseUrl, pages, folder) {
 
 		try {
 			if (!existsSync(jsonFileName)) {
+				s.start(chalk.green(`🧭 Navigating to ${pageUrl}`));
+
 				await pageInstance.goto('https://tolkiengateway.net', {
 					waitUntil: 'networkidle2',
 					timeout: 60000,
@@ -85,17 +83,24 @@ async function saveData(baseUrl, pages, folder) {
 					(await pageInstance.$('title')) ? await pageInstance.title() : null;
 
 				if (pageTitle?.includes('Just a moment')) {
-					const s2 = spinner();
+					mimicClack(
+						chalk.yellow('⏳ Challenge detected, skipping the entry...'),
+						true
+					);
 
-					s2.start(chalk.yellow('⏳ Challenge detected, waiting for it to pass'));
-					const result = await pageInstance.waitForNavigation({
-						waitUntil: 'networkidle2',
-						timeout: 300000,
-					});
+					continue;
 
-					if (!result?.ok) return;
+					// const s2 = spinner();
 
-					s2.stop(chalk.green('⏳ Challenge passed!'));
+					// s2.start(chalk.yellow('⏳ Challenge detected, waiting for it to pass'));
+					// const result = await pageInstance.waitForNavigation({
+					// 	waitUntil: 'networkidle2',
+					// 	timeout: 300000,
+					// });
+
+					// if (!result?.ok) return;
+
+					// s2.stop(chalk.green('⏳ Challenge passed!'));
 				}
 
 				await pageInstance.waitForSelector('#mw-content-text', { timeout: 20000 });
@@ -146,7 +151,7 @@ async function saveData(baseUrl, pages, folder) {
 				fs.writeFileSync(jsonFileName, JSON.stringify(pageData, null, 2));
 				s.stop(chalk.greenBright(`💾 Saved: ${jsonFileName}`));
 			} else {
-				s.stop(chalk.redBright(`⛔ File Already Exists: ${jsonFileName}`));
+				mimicClack(chalk.redBright(`⛔ File Already Exists: ${jsonFileName}`));
 			}
 		} catch (error) {
 			mimicClack(
